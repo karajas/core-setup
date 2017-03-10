@@ -12,6 +12,7 @@ param(
     [string[]]$Targets=@("Default"),
     [string[]]$EnvVars=@(),
     [switch]$NoPackage,
+    [switch]$SkipBuild,
     [switch]$Help)
 
 if($Help)
@@ -27,6 +28,7 @@ if($Help)
     Write-Host "  -Targets <TARGETS...>              Comma separated build targets to run (Init, Compile, Publish, etc.; Default is a full build and publish)"
     Write-Host "  -EnvVars <'V1=val1','V2=val2'...>  Comma separated list of environment variable name-value pairs"
     Write-Host "  -NoPackage                         Skip packaging targets"
+    Write-Host "  -SkipBuild                         Skip product build"
     Write-Host "  -Help                              Display this help message"
     exit 0
 }
@@ -120,6 +122,13 @@ pushd "$PSScriptRoot\.."
 dotnet restore --infer-runtimes
 if($LASTEXITCODE -ne 0) { throw "Failed to restore" }
 popd
+
+#Skip Build
+if($SkipBuild)
+{
+  Write-Host "Skipping product build..."
+  exit 0
+}
 
 # Publish the builder
 Write-Host "Compiling Build Scripts..."
