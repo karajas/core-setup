@@ -1,14 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Source of truth for dependency tooling: the commit hash of the dotnet/versions master branch as of the last auto-upgrade. -->
+
+  <!-- For detailed explanation of the reference versions see:
+
+        https://github.com/dotnet/buildtools/blob/master/Documentation/project-nuget-dependencies.md
+        https://github.com/dotnet/buildtools/blob/master/Documentation/annotated-dependency-props.md
+
+       These ref versions are pulled from https://github.com/dotnet/versions.
+  -->
   <PropertyGroup>
-       <CoreCLRVersion>2.0.0-preview2-25226-02</CoreCLRVersion>
-       <JitVersion>2.0.0-preview2-25226-02</JitVersion>
+    <CoreFxCurrentRef>824797963a7c7cfce78899f9c1af01e1011a1bd9</CoreFxCurrentRef>
+    <CoreClrCurrentRef>824797963a7c7cfce78899f9c1af01e1011a1bd9</CoreClrCurrentRef>
+    <StandardCurrentRef>824797963a7c7cfce78899f9c1af01e1011a1bd9</StandardCurrentRef>
+  </PropertyGroup>
+  
+  <!-- Auto-upgraded properties for each build info dependency. -->
+  <PropertyGroup>
+    <CoreFxExpectedPrerelease>preview2-25301-02</CoreFxExpectedPrerelease>
+    <CoreClrExpectedPrerelease>preview2-25301-02</CoreClrExpectedPrerelease>
+    <StandardExpectedPrerelease>preview2-25301-01</StandardExpectedPrerelease>
+  </PropertyGroup>
+  
+  <!-- Package dependency verification/auto-upgrade configuration. -->
+   <PropertyGroup>
+      <BaseDotNetBuildInfo>build-info/dotnet/</BaseDotNetBuildInfo>
+      <DependencyBranch>master</DependencyBranch>
+      <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
   </PropertyGroup>
 
-  <!-- Create a collection of all project.json files for dependency updates. -->
   <ItemGroup>
-    <_ProjectJsonExcludes Include="$(SourceDir)test\**\project.json" />
-    <_ProjectJsonExcludes Include="$(SourceDir)pkg\**\project.json" />
-    <ProjectJsonFiles Include="$(SourceDir)**\project.json" Exclude="@(_ProjectJsonExcludes)" />
+    <RemoteDependencyBuildInfo Include="CoreFx">
+        <BuildInfoPath>$(BaseDotNetBuildInfo)corefx/$(DependencyBranch)</BuildInfoPath>
+        <CurrentRef>$(CoreFxCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+    <RemoteDependencyBuildInfo Include="CoreClr">
+        <BuildInfoPath>$(BaseDotNetBuildInfo)coreclr/$(DependencyBranch)</BuildInfoPath>
+        <CurrentRef>$(CoreClrCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+    <RemoteDependencyBuildInfo Include="Standard">
+        <BuildInfoPath>$(BaseDotNetBuildInfo)standard/$(DependencyBranch)</BuildInfoPath>
+        <CurrentRef>$(CoreClrCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+
+    <DependencyBuildInfo Include="@(RemoteDependencyBuildInfo)">
+        <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
+    </DependencyBuildInfo>
+    
+    <XmlUpdateStep Include="CoreFx">
+        <Path>$(MSBuildThisFileFullPath)</Path>
+        <ElementName>CoreFxExpectedPrerelease</ElementName>
+        <BuildInfoName>CoreFx</BuildInfoName>
+    </XmlUpdateStep>
+    <XmlUpdateStep Include="CoreClr">
+        <Path>$(MSBuildThisFileFullPath)</Path>
+        <ElementName>CoreClrExpectedPrerelease</ElementName>
+        <BuildInfoName>CoreClr</BuildInfoName>
+    </XmlUpdateStep>
+    <XmlUpdateStep Include="Standard">
+        <Path>$(MSBuildThisFileFullPath)</Path>
+        <ElementName>StandardExpectedPrerelease</ElementName>
+        <BuildInfoName>Standard</BuildInfoName>
+    </XmlUpdateStep>
+  </ItemGroup>
+
+  <PropertyGroup>
+     <CoreCLRVersion>2.0.0-preview2-25226-02</CoreCLRVersion>
+     <JitVersion>2.0.0-preview2-25226-02</JitVersion>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectJsonFiles Include="$(MSBuildThisFileDirectory)/tools-local/**/project.json.template" />
+    <ProjectJsonFiles Include="$(MSBuildThisFileDirectory)/src/**/project.json.template" />
+    <ProjectJsonFiles Include="$(MSBuildThisFileDirectory)/src/pkg/deps/project.json" />
   </ItemGroup>
 </Project>
