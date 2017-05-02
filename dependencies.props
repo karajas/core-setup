@@ -15,8 +15,8 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <PlatformPackageVersion>2.0.0-preview2-25226-02</PlatformPackageVersion>
-    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion>2.0.0-preview2-25226-02</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+    <PlatformPackageVersion>2.0.0-preview2-25301-02</PlatformPackageVersion>
+    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion>2.0.0-preview2-25301-04</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
     <MicrosoftNETCoreRuntimeJitPackageVersion>$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)</MicrosoftNETCoreRuntimeJitPackageVersion>
   </PropertyGroup>
   
