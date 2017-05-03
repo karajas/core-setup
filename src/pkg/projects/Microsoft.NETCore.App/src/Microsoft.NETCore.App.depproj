@@ -95,6 +95,10 @@
         <NuGetPackageId>$(_runtimePackageId)</NuGetPackageId>
         <TargetPath>tools</TargetPath>
       </_FilesToPackage>
+      <!-- workaround CoreLib removal from native folder -->
+      <FilesToPackage Include="@(_runtimeCoreLib)">
+        <TargetPath>runtimes/$(NuGetRuntimeIdentifier)/native</TargetPath>
+      </FilesToPackage>
     </ItemGroup>
 
     <ItemGroup Condition="'$(NuGetRuntimeIdentifier)' == ''">
