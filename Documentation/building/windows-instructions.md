@@ -16,9 +16,14 @@ Visual Studio must be installed. Supported versions:
 For Visual Studio 2015:
 * To debug managed code, ensure you have installed at least [Visual Studio 2015 Update 3](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs).
 * Make sure that you install "VC++ Tools". By default, they will not be installed.
-* To build for Arm32, Make sure that you have the Windows SDK for Windows 10 installed (or selected to be installed as part of VS installation). To explicitly install Windows SDK, download it from here: [Windows SDK for Windows 10](https://developer.microsoft.com/en-us/windows/downloads)
 
 Visual Studio Express is not supported.
+
+## Windows SDK
+
+Make sure that you have the Windows SDK for Windows 10 installed (or selected to be installed as part of VS installation). Windows SDK is required to build UWPShim (the host for launching UWP apps on CoreCLR).
+
+To explicitly install Windows SDK, download it from here: [Windows SDK for Windows 10](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) ([Archives](https://developer.microsoft.com/en-us/windows/downloads/sdk-archive))
 
 ## CMake
 
